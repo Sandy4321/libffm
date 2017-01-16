@@ -18,6 +18,18 @@
 #endif
 
 #include "ffm.h"
+#include <time.h>
+
+const std::string currentDateTime() {
+  time_t     now = time(0);
+  struct tm  tstruct;
+  char       buf[80];
+  tstruct = *localtime(&now);
+  // Visit http://en.cppreference.com/w/cpp/chrono/c/strftime
+  // for more information about date/time format
+  strftime(buf, sizeof(buf), "%Y-%m-%d %X", &tstruct);
+  return buf;
+}
 
 namespace ffm {
 
@@ -268,11 +280,11 @@ shared_ptr<ffm_model> train(
 
         cout.width(4);
         cout << "iter";
-        cout.width(13);
+        cout.width(13 + 25);
         cout << "tr_logloss";
         if(va != nullptr && va->l != 0)
         {
-            cout.width(13);
+            cout.width(13 + 25);
             cout << "va_logloss";
         }
         cout << endl;
@@ -315,6 +327,8 @@ shared_ptr<ffm_model> train(
 
             cout.width(4);
             cout << iter;
+            cout.width(25);
+            cout << currentDateTime().c_str();
             cout.width(13);
             cout << fixed << setprecision(5) << tr_loss;
             if(va != nullptr && va->l != 0)
